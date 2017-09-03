@@ -13,6 +13,7 @@ int main(void)
         snd_pcm_sframes_t frames;
         for (i = 0; i < sizeof(buffer); i++)
                 buffer[i] = (i % 200) > 100 ? 0x66 : 0x99;
+                
         if ((err = snd_pcm_open(&handle, device, SND_PCM_STREAM_PLAYBACK, 0)) < 0) {
                 printf("Playback open error: %s\n", snd_strerror(err));
                 exit(EXIT_FAILURE);

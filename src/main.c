@@ -3,6 +3,7 @@
 
 int main(int argc, char** argv) {
 	Audio a;
-	start(a, argv[1]);
+	a.device = argv[1];
+	start(&a);
 	return 0;
 }

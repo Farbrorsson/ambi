@@ -4,7 +4,7 @@
 #include <alsa/asoundlib.h>
 
 void audio_open(Audio *a) {
-	int err = snd_pcm_open(a->pcm, a->device, SND_PCM_STREAM_PLAYBACK, 0);
+	int err = snd_pcm_open(&(a->pcm), a->device, SND_PCM_STREAM_PLAYBACK, 0);
 	if (err < 0) {
 		fprintf(stderr, "Cannot open audio device %s (%s)\n",
 			a->device,
@@ -15,12 +15,13 @@ void audio_open(Audio *a) {
 }
 
 void allocHWParams(Audio *a) {
-	int err = snd_pcm_hw_params_malloc(a->hwParams);
+	int err = snd_pcm_hw_params_malloc(&(a->hwParams));
 	if (err < 0) {
 		fprintf(stderr, "Cannot allocate hardware parameter structure(%s)\n",
 			snd_strerror(err)
 		);
 		exit(1);
+	}
 }
 
 void initHWParams(Audio *a) {
@@ -42,7 +43,7 @@ void setHWAccess(Audio *a) {
 }
 
 void setSampleFormat(Audio *a) {
-	int err = snd_pcm_hw_params_set_format(a->pcm, a->hwParams, SND_PCM_FORMAT_S16_LE) {
+	int err = snd_pcm_hw_params_set_format(a->pcm, a->hwParams, SND_PCM_FORMAT_S16_LE);
 	if (err < 0) {
 		fprintf(stderr, "cannot set sample format (%s)\n",
 			snd_strerror(err));
@@ -94,17 +95,17 @@ void start(Audio *a) {
 	short buf[128];
 
 	audio_open(a);
-	allocateHWParams(a);
+	allocHWParams(a);
 	initHWParams(a);
 	setHWAccess(a);
 	setSampleFormat(a);
 	setSampleRate(a, f);
 	setChannelCount(a, nChannels);
-	setParameters(a)
+	setParameters(a);
 
 	snd_pcm_hw_params_free(a->hwParams);
 
-	prerpareInterface(a);
+	prepareInterface(a);
 	
 
 	for (i = 0; i < 10; ++i) {
