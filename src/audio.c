@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <alsa/asoundlib.h>
 
-void open(Audio *a) {
+void audio_open(Audio *a) {
 	int err = snd_pcm_open(a->pcm, a->device, SND_PCM_STREAM_PLAYBACK, 0);
 	if (err < 0) {
 		fprintf(stderr, "Cannot open audio device %s (%s)\n",
@@ -93,7 +93,7 @@ void start(Audio *a) {
 	int err;
 	short buf[128];
 
-	open(a);
+	audio_open(a);
 	allocateHWParams(a);
 	initHWParams(a);
 	setHWAccess(a);
