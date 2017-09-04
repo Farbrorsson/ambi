@@ -64,9 +64,9 @@ void start(Audio *a) {
 	prepareInterface(a);
 	
 	for (i = 0; i < 16; i++) {
-        frames = snd_pcm_writei(handle, buffer, sizeof(buffer));
+        frames = snd_pcm_writei(a->pcm, buffer, sizeof(buffer));
         if (frames < 0)
-            frames = snd_pcm_recover(handle, frames, 0);
+            frames = snd_pcm_recover(a->pcm, frames, 0);
         if (frames < 0) {
             printf("snd_pcm_writei failed: %s\n", snd_strerror(frames));
             break;
@@ -74,7 +74,7 @@ void start(Audio *a) {
         if (frames > 0 && frames < (long)sizeof(buffer))
             printf("Short write (expected %li, wrote %li)\n", (long)sizeof(buffer), frames);
     }
-    snd_pcm_close(handle);
+    snd_pcm_close(a->pcm);
 
 	printf("success\n");
 
