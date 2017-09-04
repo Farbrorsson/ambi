@@ -70,7 +70,7 @@ void start(Audio *a) {
             printf("snd_pcm_writei failed: %s\n", snd_strerror(frames));
             break;
         }
-        if (frames > 0 && frames < (long)sizeof(buffer))
+        if (frames > 0 && frames < (long)(a->bufferSize))
             printf("Short write (expected %li, wrote %li)\n", (long)(a->bufferSize), frames);
     }
     snd_pcm_close(a->pcm);
