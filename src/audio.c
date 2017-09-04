@@ -61,7 +61,7 @@ void start(Audio *a) {
 	prepareInterface(a);
 	
 	for (i = 0; i < 16; i++) {
-        frames = snd_pcm_writei(a->pcm, a->buffer, sizeof(buffer));
+        frames = snd_pcm_writei(a->pcm, a->buffer, a->bufferSize);
         if (frames < 0) {
         	printf("snd_pcm_recover\n");
             frames = snd_pcm_recover(a->pcm, frames, 0);
