@@ -14,61 +14,6 @@ void audio_open(Audio *a) {
 	}
 }
 
-void allocHWParams(Audio *a) {
-	int err = snd_pcm_hw_params_malloc(&(a->hwParams));
-	if (err < 0) {
-		fprintf(stderr, "Cannot allocate hardware parameter structure(%s)\n",
-			snd_strerror(err)
-		);
-		exit(1);
-	}
-}
-
-void initHWParams(Audio *a) {
-	int err = snd_pcm_hw_params_any(a->pcm, a->hwParams);
-	if (err < 0) {
-		fprintf(stderr, "cannot initialize hardware structure (%s)\n",
-			snd_strerror(err));
-		exit(1);
-	}
-}
-
-void setHWAccess(Audio *a) {
-	int err = snd_pcm_hw_params_set_access(a->pcm, a->hwParams, SND_PCM_ACCESS_RW_INTERLEAVED);
-	if (err < 0) {
-		fprintf(stderr, "cannot set access type (%s)\n",
-			snd_strerror(err));
-		exit(1);
-	}
-}
-
-void setSampleFormat(Audio *a) {
-	int err = snd_pcm_hw_params_set_format(a->pcm, a->hwParams, SND_PCM_FORMAT_S16_LE);
-	if (err < 0) {
-		fprintf(stderr, "cannot set sample format (%s)\n",
-			snd_strerror(err));
-		exit(1);
-	}
-}
-
-void setSampleRate(Audio *a, int rate) {
-	int err = snd_pcm_hw_params_set_rate_near(a->pcm, a->hwParams, &rate, 0);
-	if (err < 0) {
-		fprintf(stderr, "cannot set sample rate (%s)\n",
-			snd_strerror(err));
-		exit(1);
-	}
-}
-
-void setChannelCount(Audio *a, int n) {
-	int err = snd_pcm_hw_params_set_channels(a->pcm, a->hwParams, n);
-	if (err < 0) {
-		fprintf(stderr, "Cannot set channel count (%s)\n",
-			snd_strerror(err));
-		exit(1);
-	}
-}
-
 void setParameters(Audio *a) {
 	int err  = snd_pcm_set_params(
 		a->pcm,
@@ -100,24 +45,21 @@ void start(Audio *a) {
 	int f = 44100;
 	int i;
 	int err;
-	short buf[128];
+	char buf[256];
+	
+	for (i = 0; i < 256; i++) {
+		buf[i] = i > 128 ? 0x66 : 0x99;
+	}
+	
 
 	audio_open(a);
-	allocHWParams(a);
-	initHWParams(a);
-	setHWAccess(a);
-	setSampleFormat(a);
-	setSampleRate(a, f);
-	setChannelCount(a, nChannels);
 	setParameters(a);
-
-	snd_pcm_hw_params_free(a->hwParams);
 
 	prepareInterface(a);
 	
 
 	for (i = 0; i < 10; ++i) {
-		if ((err = snd_pcm_writei(a->pcm, buf, 128)) != 128) {
+		if ((err = snd_pcm_writei(a->pcm, buf, 256)) != 128) {
 			fprintf(stderr, "write to audio interface failed (%s)\n",
 				snd_strerror(err));
 			exit(1);

@@ -2,8 +2,9 @@
 
 typedef struct Audio {
 	snd_pcm_t *pcm;
-	snd_pcm_hw_params_t *hwParams;
 	char* device;
+	char* buffer;
+	size_t bufferSize;
 } Audio;
 
 void start(Audio*);
