@@ -70,7 +70,15 @@ void setChannelCount(Audio *a, int n) {
 }
 
 void setParameters(Audio *a) {
-	int err  = snd_pcm_hw_params(a->pcm, a->hwParams);
+	int err  = snd_pcm_set_params(
+		a->pcm
+		SND_PCM_FORMAT_U8,
+		SND_PCM_ACCESS_RW_INTERLEAVED,
+		1,
+		48000,
+		1,
+		500000
+	);
 	if (err < 0) {
 		fprintf (stderr, "cannot set parameters (%s)\n",
 			snd_strerror (err));
