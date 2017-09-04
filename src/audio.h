@@ -3,7 +3,7 @@
 typedef struct Audio {
 	snd_pcm_t *pcm;
 	char* device;
-	char* buffer;
+	unsigned char* buffer;
 	size_t bufferSize;
 } Audio;
 
