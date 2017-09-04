@@ -53,10 +53,9 @@ void start(Audio *a) {
 	
 	 snd_pcm_sframes_t frames;
 	
-	for (i = 0; i < 256; i++) {
-		buf[i] = i > 128 ? 0x66 : 0x99;
+	for (i = 0; i < 16*1024; i++) {
+		buffer[i] = (i % 256) > 128 ? 0x66 : 0x99;
 	}
-	
 
 	audio_open(a);
 	setParameters(a);
@@ -65,8 +64,10 @@ void start(Audio *a) {
 	
 	for (i = 0; i < 16; i++) {
         frames = snd_pcm_writei(a->pcm, buffer, sizeof(buffer));
-        if (frames < 0)
+        if (frames < 0) {
+        	printf("snd_pcm_recover\n");
             frames = snd_pcm_recover(a->pcm, frames, 0);
+        }
         if (frames < 0) {
             printf("snd_pcm_writei failed: %s\n", snd_strerror(frames));
             break;
