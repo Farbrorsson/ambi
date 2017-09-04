@@ -40,12 +40,18 @@ void prepareInterface(Audio *a) {
 	}
 }
 
+static char *device = "plughw:1,0";                        /* playback device */
+snd_output_t *output = NULL;
+unsigned char buffer[16*1024];        
+
 void start(Audio *a) {
 	int nChannels = 2;
 	int f = 44100;
 	int i;
 	int err;
 	unsigned char buf[256];
+	
+	 snd_pcm_sframes_t frames;
 	
 	for (i = 0; i < 256; i++) {
 		buf[i] = i > 128 ? 0x66 : 0x99;
@@ -57,14 +63,18 @@ void start(Audio *a) {
 
 	prepareInterface(a);
 	
-
-	for (i = 0; i < 10; ++i) {
-		if ((err = snd_pcm_writei(a->pcm, buf, 256)) != 128) {
-			fprintf(stderr, "write to audio interface failed (%s)\n",
-				snd_strerror(err));
-			exit(1);
-		}
-	}
+	for (i = 0; i < 16; i++) {
+        frames = snd_pcm_writei(handle, buffer, sizeof(buffer));
+        if (frames < 0)
+            frames = snd_pcm_recover(handle, frames, 0);
+        if (frames < 0) {
+            printf("snd_pcm_writei failed: %s\n", snd_strerror(frames));
+            break;
+        }
+        if (frames > 0 && frames < (long)sizeof(buffer))
+            printf("Short write (expected %li, wrote %li)\n", (long)sizeof(buffer), frames);
+    }
+    snd_pcm_close(handle);
 
 	printf("success\n");
 
