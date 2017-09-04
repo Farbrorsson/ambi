@@ -71,7 +71,7 @@ void setChannelCount(Audio *a, int n) {
 
 void setParameters(Audio *a) {
 	int err  = snd_pcm_set_params(
-		a->pcm
+		a->pcm,
 		SND_PCM_FORMAT_U8,
 		SND_PCM_ACCESS_RW_INTERLEAVED,
 		1,
