@@ -71,7 +71,7 @@ void start(Audio *a) {
             break;
         }
         if (frames > 0 && frames < (long)sizeof(buffer))
-            printf("Short write (expected %li, wrote %li)\n", (long)sizeof(buffer), frames);
+            printf("Short write (expected %li, wrote %li)\n", (long)(a->bufferSize), frames);
     }
     snd_pcm_close(a->pcm);
 
