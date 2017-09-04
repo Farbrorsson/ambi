@@ -45,7 +45,7 @@ void start(Audio *a) {
 	int f = 44100;
 	int i;
 	int err;
-	char buf[256];
+	unsigned char buf[256];
 	
 	for (i = 0; i < 256; i++) {
 		buf[i] = i > 128 ? 0x66 : 0x99;
