@@ -1,10 +1,6 @@
-#include <alsa/asoundlib.h>
-
-typedef struct Audio {
-	snd_pcm_t *pcm;
-	char* device;
+typedef struct AudioBuffer {
 	unsigned char* buffer;
-	size_t bufferSize;
-} Audio;
-
-void start(Audio*);
+	size_t nFrames;
+	int channels;
+	int rate;
+} AudioBuffer;

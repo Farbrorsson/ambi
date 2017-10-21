@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <alsa/asoundlib.h>
 
+void audio_capture(Audio *a) {
+	
+}
+
 void audio_open(Audio *a) {
 	int err = snd_pcm_open(&(a->pcm), a->device, SND_PCM_STREAM_PLAYBACK, 0);
 	if (err < 0) {
@@ -13,6 +17,7 @@ void audio_open(Audio *a) {
 		exit(1);
 	}
 }
+
 
 void setParameters(Audio *a) {
 	int err  = snd_pcm_set_params(
@@ -44,8 +49,6 @@ void prepareInterface(Audio *a) {
 //unsigned char buffer[16*1024];        
 
 void start(Audio *a) {
-	int nChannels = 2;
-	int f = 44100;
 	int i;
 	int err;
 	
